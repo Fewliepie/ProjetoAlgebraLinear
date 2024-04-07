@@ -1,0 +1,133 @@
+<%- include('partials/header') %>
+<style>
+    .form-control-square {
+        width: 200px;
+        height: 200px;
+        resize: none;
+    }
+    .matriz-input {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+    }
+</style>
+<body>
+    <%- include('partials/navbar') %>
+    <div class="container">
+        <div class="titulo-perguntas">
+            <hr>
+            <h1>Soma entre duas matrizes</h1>
+            <hr>
+        </div>
+        <br>
+        <div class="card">
+            <form action="/somarMatrizes" method="POST">
+                <div class="card-body" style="display: flex; align-items: center; justify-content: space-between;">
+                    <h3>Matrizes de ordem: </h3>
+                    <textarea placeholder="" class="form-control form-control-square" name="i"></textarea>
+                    <h3>+</h3>
+                    <textarea placeholder="" class="form-control form-control-square" name="j"></textarea>
+                    <button type="submit" class="btn btn-primary">Gerar Matrizes</button>
+                </div>
+            </form>
+            <% if (typeof matriz1 !== 'undefined' && typeof matriz2 !== 'undefined') { %>
+                <form id="formCalcular">
+                    <div style="margin-top: 20px; display: flex; align-items: center;">
+                        <div>
+                            <h2>Matriz 1</h2>
+                            <table id="matriz1">
+                                <% matriz1.forEach(function(row, rowIndex) { %>
+                                    <tr>
+                                        <% row.forEach(function(cell, cellIndex) { %>
+                                            <td><input type="text" name="matriz1[<%=rowIndex%>][<%=cellIndex%>]" class="matriz-input" value="<%= cell %>"></td>
+                                        <% }); %>
+                                    </tr>
+                                <% }); %>
+                            </table>
+                        </div>
+                        <h1>+</h1>
+                        <div>
+                            <h2>Matriz 2</h2>
+                            <table id="matriz2">
+                                <% matriz2.forEach(function(row, rowIndex) { %>
+                                    <tr>
+                                        <% row.forEach(function(cell, cellIndex) { %>
+                                            <td><input type="text" name="matriz2[<%=rowIndex%>][<%=cellIndex%>]" class="matriz-input" value="<%= cell %>"></td>
+                                        <% }); %>
+                                    </tr>
+                                <% }); %>
+                            </table>
+                        </div>
+                        <h3>=</h3>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Calcular</button>
+                </form>
+            <% } else { %>
+            <% } %>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('formCalcular').addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    
+                    const matriz1 = [...document.querySelectorAll('#matriz1 tr')].map(row =>
+                        [...row.querySelectorAll('input')].map(input => parseFloat(input.value))
+                    );
+                    const matriz2 = [...document.querySelectorAll('#matriz2 tr')].map(row =>
+                        [...row.querySelectorAll('input')].map(input => parseFloat(input.value))
+                    );
+            
+                    const resultadoSoma = matriz1.map((row, i) =>
+                        row.map((cell, j) => cell + matriz2[i][j])
+                    );
+            
+                    let tabelaResultado = document.getElementById('resultadoSoma');
+                    if (!tabelaResultado) {
+                        tabelaResultado = document.createElement('table');
+                        tabelaResultado.id = 'resultadoSoma';
+
+                        const containerResultado = document.createElement('div');
+                        containerResultado.appendChild(tabelaResultado);
+
+                         tituloResultado = document.createElement('h2');
+                        tituloResultado.textContent = 'Resultante:';
+                        containerResultado.insertBefore(tituloResultado, tabelaResultado);
+
+                        const divMatrizes = document.querySelector('div[style="margin-top: 20px; display: flex; align-items: center;"]');
+
+                        if (divMatrizes) {
+                            divMatrizes.appendChild(containerResultado);
+                        } else {
+                            document.getElementById('formCalcular').after(containerResultado);
+                        }
+                    }
+                    tabelaResultado.innerHTML = '';
+                    resultadoSoma.forEach((row, rowIndex) => {
+
+                        let tbody = tabelaResultado.querySelector('tbody');
+                        if (!tbody) {
+                            tbody = document.createElement('tbody');
+                            tabelaResultado.appendChild(tbody);
+                        }
+
+                        const tr = document.createElement('tr');
+                        row.forEach((cell, cellIndex) => {
+                            const td = document.createElement('td');
+                            const input = document.createElement('input');
+                            input.type = 'text';
+                            input.className = 'matriz-input';
+                            input.name = `resultado[${rowIndex}][${cellIndex}]`;
+                            input.value = cell.toFixed();
+
+                            td.appendChild(input);
+                            tr.appendChild(td);
+                        });
+                        tbody.appendChild(tr);
+                    });
+                });
+            });
+            </script>
+            
+    </div>
+</body>
+<%- include('partials/footer') %>
