@@ -16,43 +16,35 @@
     <div class="container">
         <div class="titulo-perguntas">
             <hr>
-            <h1>Soma entre duas matrizes</h1>
+            <h1>Produto entre um escalar e uma matriz</h1>
             <hr>
         </div>
         <br>
         <div class="card">
-            <form action="/somarMatrizes" method="POST">
+            <form action="/multiplicarMatrizXEscalar" method="POST">
                 <div class="card-body" style="display: flex; align-items: center; justify-content: space-between;">
-                    <h3>Matrizes de ordem: </h3>
+                    <h3>Matriz de ordem:</h3>
                     <textarea placeholder="" class="form-control form-control-square" name="i"></textarea>
                     <h3>+</h3>
                     <textarea placeholder="" class="form-control form-control-square" name="j"></textarea>
-                    <button type="submit" class="btn btn-primary">Gerar Matrizes</button>
+                    <button type="submit" class="btn btn-primary">Gerar Matriz</button>
                 </div>
             </form>
-            <% if (typeof matriz1 !== 'undefined' && typeof matriz2 !== 'undefined') { %>
+            <% if (typeof matriz !== 'undefined') { %>
                 <form id="formCalcular">
                     <div style="margin-top: 20px; display: flex; align-items: center;">
                         <div>
-                            <h2>Matriz 1</h2>
-                            <table id="matriz1">
-                                <% matriz1.forEach(function(row, rowIndex) { %>
-                                    <tr>
-                                        <% row.forEach(function(cell, cellIndex) { %>
-                                            <td><input type="text" name="matriz1[<%=rowIndex%>][<%=cellIndex%>]" class="matriz-input" value="<%= cell %>"></td>
-                                        <% }); %>
-                                    </tr>
-                                <% }); %>
-                            </table>
+                            <h2>Escalar:</h2>
+                                <input type="text" class="matriz-input" id="escalar"></input>
                         </div>
-                        <h1>+</h1>
+                        <h1>X</h1>
                         <div>
-                            <h2>Matriz 2</h2>
-                            <table id="matriz2">
-                                <% matriz2.forEach(function(row, rowIndex) { %>
+                            <h2>Matriz</h2>
+                            <table id="matriz">
+                                <% matriz.forEach(function(row, rowIndex) { %>
                                     <tr>
                                         <% row.forEach(function(cell, cellIndex) { %>
-                                            <td><input type="text" name="matriz2[<%=rowIndex%>][<%=cellIndex%>]" class="matriz-input" value="<%= cell %>"></td>
+                                            <td><input type="text" name="matriz[<%=rowIndex%>][<%=cellIndex%>]" class="matriz-input" value="<%= cell %>"></td>
                                         <% }); %>
                                     </tr>
                                 <% }); %>
@@ -70,16 +62,16 @@
                 document.getElementById('formCalcular').addEventListener('submit', function (e) {
                     e.preventDefault();
                     
-                    const matriz1 = [...document.querySelectorAll('#matriz1 tr')].map(row =>
+                    const matriz = [...document.querySelectorAll('#matriz tr')].map(row =>
                         [...row.querySelectorAll('input')].map(input => parseFloat(input.value))
                     );
-                    console.log(matriz1)
-                    const matriz2 = [...document.querySelectorAll('#matriz2 tr')].map(row =>
-                        [...row.querySelectorAll('input')].map(input => parseFloat(input.value))
-                    );
-                    console.log(matriz2)
-                    const resultadoSoma = matriz1.map((row, i) =>
-                        row.map((cell, j) => cell + matriz2[i][j])
+                    console.log(matriz)
+
+                    const escalar = document.querySelector('#escalar').value;
+                    console.log(escalar)
+
+                    const resultadoSoma = matriz.map((row, i) =>
+                        row.map((cell, j) => cell * escalar)
                     );
 
                     console.log(resultadoSoma)
@@ -130,7 +122,6 @@
                 });
             });
             </script>
-            
     </div>
 </body>
 <%- include('partials/footer') %>

@@ -35,6 +35,28 @@ app.post('/somarMatrizes', (req, res) => {
     });
 });
 
+app.get('/multiplicarMatrizXEscalar', (req, res) => {
+    res.render('multiplicarMatrizXEscalar')
+})
+
+app.post('/multiplicarMatrizXEscalar', (req, res) => {
+    const i = parseInt(req.body.i, 10);
+    const j = parseInt(req.body.j, 10);
+
+    console.log(`i: ${i}, j: ${j}`)
+    if (isNaN(i) || isNaN(j) || i <= 0 || j <= 0 || i > 10 || j > 10) {
+        return res.status(400).send('Dimensões inválidas para a matriz. As dimensões devem ser positivas e não podem exceder 10.');
+    }
+
+    let matriz = Array(i).fill().map(() => Array(j).fill());
+
+    console.log(matriz)
+
+    res.render('multiplicarMatrizXEscalar', { 
+        matriz: matriz, 
+    });
+})
+
 app.listen(8080, () => {
     console.log("App rodando!");
     console.log("Acesse-o em http://localhost:8080/");
