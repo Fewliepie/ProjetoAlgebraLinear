@@ -1,0 +1,40 @@
+<%- include('partials/header') %>
+<style>
+    .form-control-square {
+        width: 200px;
+        height: 400px;
+        resize: none;
+    }
+    .matriz-input {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+    }
+</style>
+<body>
+    <%- include('partials/navbar') %>
+    <div class="container">
+        <div class="titulo-perguntas">
+            <hr>
+            <h1>Solução de um sistema linear (método de Gauss)</h1>
+            <hr>
+        </div>
+        <br>
+        <div class="card">
+            <form action="/resolverSistemaLinear" method="POST">
+                <div class="card-body" style="display: flex; align-items: center; justify-content: space-between;">
+                    <h3>Sistema: </h3>
+                    <textarea class="form-control form-control-square" name="equations"></textarea>
+                    <button type="submit" class="btn btn-primary">Resolver Sistema</button>
+                </div>
+            </form>
+            <% if (typeof resultado !== 'undefined') { %>
+                <div class="resultado">
+                    <h3>Resultado:</h3>
+                    <p><%= resultado %></p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
+</body>

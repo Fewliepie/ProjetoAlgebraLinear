@@ -1,3 +1,5 @@
+const { parseEquation, gaussJordanElimination } = require('./scripts/algoritmoSistema');
+
 const express = require('express');
 const app = express();
 
@@ -73,6 +75,9 @@ app.post('/multiplicarMatrizXMatriz', (req, res) => {
     if (isNaN(i1, i2) || isNaN(j1, j2) || i1, i2 <= 0 || j1, j2 <= 0 || i1, i2 > 10 || j1, j2 > 10) {
         return res.status(400).send('Dimensões inválidas para as matrizes. As dimensões devem ser positivas e não podem exceder 10.');
     }
+    if (i1 != j2) {
+        return res.status(401).send('Dimensões inválidas para as matrizes. O número de linhas da primeira matriz deve ser igual ao de colunas da segunda.')
+    }
 
     let matriz1 = Array(i1).fill().map(() => Array(j1).fill());
     let matriz2 = Array(i2).fill().map(() => Array(j2).fill());
@@ -86,6 +91,17 @@ app.post('/multiplicarMatrizXMatriz', (req, res) => {
     });
 });
 
+app.get('/resolverSistemaLinear', (req, res) => {
+    res.render('resolverSistemaLinear')
+})
+
+app.post('/resolverSistemaLinear', (req, res) => {
+    const equations = req.body.equations.split('\n');
+    let matrix = equations.map(eq => parseEquation(eq).slice(0, 3));
+    let constants = equations.map(eq => parseEquation(eq)[3]);
+    let resultado = gaussJordanElimination(matrix, constants);
+    res.render('resolverSistemaLinear', { resultado });
+});
 
 app.listen(8080, () => {
     console.log("App rodando!");
