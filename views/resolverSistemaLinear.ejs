@@ -10,6 +10,15 @@
         height: 50px;
         text-align: center;
     }
+    .estagio table {
+        margin: 10px;
+        border-collapse: collapse;
+    }
+    .estagio td {
+        border: 1px solid #ccc;
+        padding: 5px;
+        text-align: center;
+    }
 </style>
 <body>
     <%- include('partials/navbar') %>
@@ -28,10 +37,36 @@
                     <button type="submit" class="btn btn-primary">Resolver Sistema</button>
                 </div>
             </form>
-            <% if (typeof resultado !== 'undefined') { %>
+            <% if (typeof stages !== 'undefined' && typeof solution !== 'undefined') { %>
+                <% 
+                function formatNumber(num) {
+                    let fixedNum = parseFloat(num.toFixed(2));
+                    if (Math.floor(fixedNum) === fixedNum) {
+                        return fixedNum.toString();
+                    } else {
+                        return fixedNum.toFixed(2).replace(/\.?0+$/, '');
+                    }
+                }
+                %>
+                <div class="estagios">
+                    <% stages.forEach((stage, index) => { %>
+                        <div class="estagio">
+                            <h4>Estágio <%= index + 1 %>:</h4>
+                            <table>
+                                <% stage.forEach(row => { %>
+                                    <tr>
+                                        <% row.forEach(value => { %>
+                                            <td><%= formatNumber(value) %></td>
+                                        <% }); %>
+                                    </tr>
+                                <% }); %>
+                            </table>
+                        </div>
+                    <% }); %>
+                </div>
                 <div class="resultado">
-                    <h3>Resultado:</h3>
-                    <p><%= resultado %></p>
+                    <h3>Resultado Final:</h3>
+                    <p><%= solution %></p>
                 </div>
             <% } %>
         </div>

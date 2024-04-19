@@ -24,11 +24,14 @@ function parseEquation(equation) {
 
 function gaussJordanElimination(matrix, constants) {
     let n = constants.length;
+    let stages = [];  // Lista para armazenar os estágios da matriz
+    let solution = new Array(n).fill(0);  // Definindo a solução aqui para garantir o escopo
 
     // Construindo a matriz aumentada
     for (let i = 0; i < n; i++) {
         matrix[i].push(constants[i]);
     }
+    stages.push(matrix.map(row => row.slice())); // Cópia profunda do estado inicial
 
     // Escalonamento de Gauss
     for (let i = 0; i < n; i++) {
@@ -41,10 +44,10 @@ function gaussJordanElimination(matrix, constants) {
 
         [matrix[i], matrix[maxRow]] = [matrix[maxRow], matrix[i]];
 
-        if (matrix[i][i] == 0) {
+        if (matrix[i][i] === 0) {
             let allZero = matrix[i].every(val => val === 0);
             if (!allZero) {
-                return "Sistema impossível";
+                return { solution: "Sistema impossível", stages };
             }
             continue;
         }
@@ -59,26 +62,24 @@ function gaussJordanElimination(matrix, constants) {
                 }
             }
         }
+
+        stages.push(matrix.map(row => row.slice())); // Cópia profunda após cada operação
     }
 
-    let solution = new Array(n).fill(0);
+    // Resolvendo de volta
     for (let i = n - 1; i >= 0; i--) {
-        if (matrix[i][i] == 0) {
-            continue;
-        }
         solution[i] = matrix[i][n] / matrix[i][i];
         for (let k = i - 1; k >= 0; k--) {
             matrix[k][n] -= matrix[k][i] * solution[i];
         }
     }
 
-    let numPivots = matrix.filter(row => row.some((value, index) => index < n && value !== 0)).length;
-    if (numPivots < n) {
-        return "Sistema possível e indeterminado";
-    }
+    // Formatação do conjunto solução
+    let formattedSolution = solution.map((s, index) => `x${index + 1} = ${s.toFixed(2)}`).join(', ');
 
-    return "Solução: " + solution.join(', ');
+    return { solution: "Conjunto solução: " + formattedSolution, stages };
 }
+
 
 module.exports = {
     parseEquation,

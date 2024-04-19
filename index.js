@@ -99,8 +99,8 @@ app.post('/resolverSistemaLinear', (req, res) => {
     const equations = req.body.equations.split('\n');
     let matrix = equations.map(eq => parseEquation(eq).slice(0, 3));
     let constants = equations.map(eq => parseEquation(eq)[3]);
-    let resultado = gaussJordanElimination(matrix, constants);
-    res.render('resolverSistemaLinear', { resultado });
+    let { solution, stages } = gaussJordanElimination(matrix, constants);
+    res.render('resolverSistemaLinear', { solution, stages });
 });
 
 app.listen(8080, () => {
