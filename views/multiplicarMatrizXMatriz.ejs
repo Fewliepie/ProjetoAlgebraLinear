@@ -77,31 +77,41 @@
                     const matriz1 = [...document.querySelectorAll('#matriz1 tr')].map(row =>
                         [...row.querySelectorAll('input')].map(input => parseFloat(input.value))
                     );
-                    console.log(matriz1)
+                    console.log(matriz1);
                     const matriz2 = [...document.querySelectorAll('#matriz2 tr')].map(row =>
                         [...row.querySelectorAll('input')].map(input => parseFloat(input.value))
                     );
-                    console.log(matriz2)
-                    const resultadoSoma = matriz1.map((row, i) =>
-                        row.map((cell, j) => cell * matriz2[j][i])
-                    );
-
-                    console.log(resultadoSoma)
+                    console.log(matriz2);
+        
+                    // Calcular a matriz resultante da multiplicação
+                    const resultadoSoma = [];
+                    for (let i = 0; i < matriz1.length; i++) {
+                        resultadoSoma[i] = [];
+                        for (let j = 0; j < matriz2[0].length; j++) {
+                            let sum = 0;
+                            for (let k = 0; k < matriz1[0].length; k++) {
+                                sum += matriz1[i][k] * matriz2[k][j];
+                            }
+                            resultadoSoma[i][j] = sum;
+                        }
+                    }
+        
+                    console.log(resultadoSoma);
             
                     let tabelaResultado = document.getElementById('resultadoSoma');
                     if (!tabelaResultado) {
                         tabelaResultado = document.createElement('table');
                         tabelaResultado.id = 'resultadoSoma';
-
+        
                         const containerResultado = document.createElement('div');
                         containerResultado.appendChild(tabelaResultado);
-
-                         tituloResultado = document.createElement('h2');
+        
+                        const tituloResultado = document.createElement('h2');
                         tituloResultado.textContent = 'Resultante:';
                         containerResultado.insertBefore(tituloResultado, tabelaResultado);
-
+        
                         const divMatrizes = document.querySelector('div[style="margin-top: 20px; display: flex; align-items: center;"]');
-
+        
                         if (divMatrizes) {
                             divMatrizes.appendChild(containerResultado);
                         } else {
@@ -110,13 +120,12 @@
                     }
                     tabelaResultado.innerHTML = '';
                     resultadoSoma.forEach((row, rowIndex) => {
-
                         let tbody = tabelaResultado.querySelector('tbody');
                         if (!tbody) {
                             tbody = document.createElement('tbody');
                             tabelaResultado.appendChild(tbody);
                         }
-
+        
                         const tr = document.createElement('tr');
                         row.forEach((cell, cellIndex) => {
                             const td = document.createElement('td');
@@ -124,8 +133,8 @@
                             input.type = 'text';
                             input.className = 'matriz-input';
                             input.name = `resultado[${rowIndex}][${cellIndex}]`;
-                            input.value = cell.toFixed();
-
+                            input.value = cell.toFixed(2);
+        
                             td.appendChild(input);
                             tr.appendChild(td);
                         });
@@ -133,8 +142,7 @@
                     });
                 });
             });
-            </script>
-            
+        </script>        
     </div>
 </body>
 <%- include('partials/footer') %>

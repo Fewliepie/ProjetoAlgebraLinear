@@ -112,7 +112,7 @@
                             input.type = 'text';
                             input.className = 'matriz-input';
                             input.name = `resultado[${rowIndex}][${cellIndex}]`;
-                            input.value = cell.toFixed();
+                            input.value = cell.toFixed(2);
 
                             td.appendChild(input);
                             tr.appendChild(td);
